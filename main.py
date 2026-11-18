@@ -5,6 +5,8 @@
     uv run main.py add-lib <domain>     # copy a libs/ building block into the project
     uv run main.py container [name]     # stamp a container template
     uv run main.py setup <area>         # re-run a setup slice (uv | claude | mcp | obsidian)
+    uv run main.py projects             # how dev projects map to vault project notes (read-only)
+    uv run main.py sync [--apply]       # dev projects -> vault notes; dry run unless --apply
 
 Stdlib-only, like the installer, so it runs on a fresh clone before `uv sync`.
 Real logic lives in the `devenv` package; this file is a thin dispatcher.
@@ -59,6 +61,18 @@ def cmd_setup(args: argparse.Namespace) -> int:
     return commands.setup(ROOT, args.area, Runner(dry_run=args.dry_run))
 
 
+def cmd_projects(args: argparse.Namespace) -> int:
+    from app import cli  # imported lazily so the scaffold commands never depend on app code
+
+    return cli.projects(args.vault)
+
+
+def cmd_sync(args: argparse.Namespace) -> int:
+    from app import cli
+
+    return cli.sync(args.vault, apply=args.apply)
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="main.py", description="Project command router.")
     parser.add_argument("--dry-run", action="store_true", help="narrate actions, change nothing")
@@ -79,6 +93,17 @@ def build_parser() -> argparse.ArgumentParser:
     p_set = sub.add_parser("setup", help="re-run a setup slice")
     p_set.add_argument("area", choices=("uv", "claude", "mcp", "obsidian"), help="which slice")
     p_set.set_defaults(func=cmd_setup)
+
+    vault_help = "vault root (default: $NEO_JUNO_VAULT, else ~/Vaults/Immrama/Immrama)"
+
+    p_proj = sub.add_parser("projects", help="report how dev projects map to vault project notes")
+    p_proj.add_argument("--vault", help=vault_help)
+    p_proj.set_defaults(func=cmd_projects)
+
+    p_sync = sub.add_parser("sync", help="sync dev project fields into vault notes (dry run by default)")
+    p_sync.add_argument("--vault", help=vault_help)
+    p_sync.add_argument("--apply", action="store_true", help="write the changes to the vault")
+    p_sync.set_defaults(func=cmd_sync)
 
     return parser
 

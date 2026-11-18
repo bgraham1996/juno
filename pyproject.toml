@@ -20,4 +20,5 @@ db = ["psycopg2-binary>=2.9"]
 dev = ["pytest>=8.0"]
 
 [tool.pytest.ini_options]
-pythonpath = ["."]
+# ".bootstrap" is where the scaffolder's `devenv` package lives once bootstrapped.
+pythonpath = [".", ".bootstrap"]
