@@ -24,7 +24,7 @@ Links dev projects in `~/dev` to project notes in the Immrama vault
 ### Decisions
 
 - **The project code is the join key.** `projectCode` in a project's `metadata.json` matches
-  `ProjectCode` in a note's frontmatter (3–8 uppercase letters/digits, the vault template's rule).
+  `ProjectCode` in a note's frontmatter (3–10 uppercase letters/digits; widened from the vault template's 3–8 on 2026-11-18).
 - **`obsidianNote` is an explicit, redundant link.** Optional in `metadata.json`; names the note
   (plain name, `[[wikilink]]`, or vault-relative path) and takes precedence over the code. It
   exists for the day several versions of one project need to point at different notes.

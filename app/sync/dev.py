@@ -15,8 +15,8 @@ from pathlib import Path
 from app.sync.fields import FIELDS
 from app.sync.models import ProjectRecord
 
-# Same shape the vault's Project Template enforces.
-CODE_RE = re.compile(r"^[A-Z0-9]{3,8}$")
+# Vault template enforces 3-8; widened to 3-10 here (see wiki/design.md).
+CODE_RE = re.compile(r"^[A-Z0-9]{3,10}$")
 
 DEV_PROJECT_TYPE = "dev"  # everything the registry indexes is a dev project
 
@@ -71,7 +71,7 @@ def record_from_row(row: dict) -> ProjectRecord:
             record.code = code
         else:
             record.issues.append(
-                f"projectCode {record.code!r} is not 3-8 uppercase letters/digits; ignored"
+                f"projectCode {record.code!r} is not 3-10 uppercase letters/digits; ignored"
             )
             record.code = None
     return record

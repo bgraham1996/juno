@@ -182,6 +182,15 @@ def test_invalid_code_is_ignored_with_an_issue(tmp_path):
     assert record.code is None and record.issues
 
 
+@pytest.mark.parametrize(
+    "code, valid",
+    [("AB", False), ("ABC", True), ("JUNO001", True), ("ABCDEFGHIJ", True), ("ABCDEFGHIJK", False)],
+)
+def test_code_length_is_3_to_10(tmp_path, code, valid):
+    record = dev.record_from_row(make_project(tmp_path, code, {"projectCode": code}))
+    assert (record.code == code) is valid
+
+
 def test_home_is_shortened(monkeypatch, tmp_path):
     monkeypatch.setattr(Path, "home", lambda: tmp_path)
     record = dev.record_from_row(make_project(tmp_path, "p", None))
