@@ -15,7 +15,7 @@ from pathlib import Path
 from app.sync.fields import FIELDS
 from app.sync.models import ProjectRecord
 
-# Vault template enforces 3-8; widened to 3-10 here (see wiki/design.md).
+# Same shape the vault's Project Template enforces (3-10; see wiki/design.md).
 CODE_RE = re.compile(r"^[A-Z0-9]{3,10}$")
 
 DEV_PROJECT_TYPE = "dev"  # everything the registry indexes is a dev project
